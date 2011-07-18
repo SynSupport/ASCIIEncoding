@@ -1,0 +1,26 @@
+import SynPSG.Text.Encoding
+
+main
+    record
+        byteArray       ,[#]@Byte
+        oldString       ,string
+        wrkByte         ,@Byte
+    endrecord
+
+proc
+    open(1,O,'TT:')
+    oldString = "This is a test."
+    writes(1,"Original String:")
+    writes(1,%atrim(oldString))
+    writes(1,"")
+    byteArray = ASCIIEncoding.GetBytes(oldString)
+    writes(1,"Characters in original string: "+%string(byteArray.Length,'ZZX'))
+    writes(1,"Values of each element in the returned byte array:")
+    foreach wrkByte in byteArray
+        writes(1,%string(wrkByte,'XXX')+"  ("+^a(wrkByte)+")")
+    close 1
+.ifdef DBLNET
+    StopMessage()
+.endc ;DBLNET
+    stop D_EXIT_SUCCESS
+end

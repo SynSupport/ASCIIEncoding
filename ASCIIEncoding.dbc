@@ -1,0 +1,78 @@
+;;**********************************************************************
+;;
+;; Title:       ASCIIEncoding.dbl
+;;
+;; Type:        Class
+;;
+;; Description: Represents an ASCII character encoding of characters.
+;;
+;; Author:      Tod Phillips, Synergex Professional Services Group
+;;
+;; Copyright:   ©Synergex International Inc.  All rights reserved.
+;;
+;; WARNING:     If you were given this code by a Synergex employee then
+;;              you may use and modify it freely for use within your
+;;              applications.
+;;
+;;              However, you may not under any circumstances distribute
+;;              this code, or any modified version of this code, to any
+;;              third party without first obtaining written permission to
+;;              do so from Synergex.  In using this code you accept that it
+;;              is provided as is, and without support or warranty.
+;;
+;;              Neither Synergex or the author accept any responsibility
+;;              for any losses or damages of any nature which may arise
+;;              from the use of this code.  This header information must
+;;              remain unaltered in the code at all times.  Possession of
+;;              this code, or any modified version of this code, indicates
+;;              your acceptance of these terms.
+;;
+;; Revision:    1.0
+;;
+;; Date:        11/13/2008
+;;**********************************************************************
+
+namespace SynPSG.Text.Encoding
+    class ASCIIEncoding
+        ;;;<summary>
+        ;;;Encodes all the characters in the specified String into a sequence of bytes.
+        ;;;</summary>
+        ;;;<param name=inAlpha>A string variable.</param>
+        ;;;<returns>Dynamic System Array of type Byte</returns>
+        public static method GetBytes, [#]@byte
+            req in s    ,string
+            endparams
+
+            record
+                p_blockSize ,i4
+                p_count     ,i4
+                p_sLength   ,i4
+                p_tempLength,i4
+                p_byteCount ,i4
+            endrecord
+            record
+                p_tempAlpha ,a32768
+                p_tempByte  ,[^size(p_tempAlpha)]i1 @p_tempAlpha
+                p_byteArray ,[#]@byte
+            endrecord
+
+        proc
+            if (s==^null || s.Length==0)
+                throw new System.ArgumentNullException("String is a null reference or has no value")
+            p_sLength = s.Length
+            p_blockSize = ^size(p_tempAlpha)
+            p_byteArray = new @Byte[p_sLength]
+            for p_count from 0 thru (p_sLength/p_blockSize)
+            begin
+                if (p_sLength>=(p_count+1)*p_blockSize)  then
+                    p_tempLength = p_blockSize
+                else
+                    p_tempLength = p_sLength - (p_count*p_blockSize)
+                p_tempAlpha = s((p_count*p_blockSize)+1:p_tempLength)
+                for p_byteCount from 1 thru p_tempLength
+                    p_byteArray[p_byteCount]=(@byte)p_tempByte[p_byteCount]
+            end
+            mreturn p_byteArray
+        endmethod
+    endclass
+endnamespace

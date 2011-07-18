@@ -1,0 +1,85 @@
+SUBMISSION AUTHOR:      Tod Phillips
+                        mail to: tod.phillips@synergex.com
+                        PSG
+                        Synergex
+                        2330 Gold Meadow Way
+                        Gold River, CA 95670
+                        Phone: 916-635-7300
+                        http://www.synergex.com
+
+SUBMISSION NAME:        ASCIIEncoding.dbl
+
+PLATFORM:               Windows, VMS, Unix
+
+SYNERGY VERSION:        Synergy v9.1.5 or higher
+
+MODIFICATION HISTORY:   November 13th, 2008 - Initial version
+                        September 20th, 2010 - Added support for Synergy 9.5
+
+DESCRIPTION:            ASCIIEncoding is a class that provides methods to represent an ASCII character
+                        encoding of characters.
+
+ADDITIONAL NOTES:       In order to use this class, it must first be prototyped with the DBLPROTO
+                        utility.  Ensure that your SYNIMPDIR and SYNEXPDIR environment variables
+                        have been set, then run the protyper by typing:
+
+                                dblproto ASCIIEncoding
+
+                        from a command prompt in the directory where the ASCIIEncoding.dbl file has
+                        been saved. (Alternately, import the file into a Workbench project, right-
+                        click the project in the Projects tab and select "Generate Synergy
+                        Protypes..."). The included file can then be compiled and added to any
+                        library or ELB.  To use the provided class methods, simply type
+
+                                import SynPSG.Text.Encoding
+
+                        at the top of your source code. (See Example, below).
+
+CLASS:                  ASCIIEncoding     (Public)
+
+ENUMERATION(S):
+        None
+
+CONSTRUCTOR:
+        None
+
+PROPERTIES:
+        None
+
+METHOD(S):
+        GetBytes
+                Encodes all the characters in the specified String into a sequence of bytes.
+
+                Usage & Overloads
+
+                ASCIIEncoding.GetBytes(string a_string), [#]@Byte
+                        a_string is a string variable
+
+
+EXAMPLE(S):
+
+        The following program demonstrates the use of the ASCIIEncoding.GetBytes method.
+
+;; Program to demonstrate the ASCIIEncoding.GetBytes method.
+
+import SynPSG.Text.Encoding
+
+main
+record
+        byteArray       ,[#]@Byte
+        oldString       ,string
+        wrkByte         ,@Byte
+endrecord
+
+proc
+        open(1,O,'TT:')
+        oldString = "This is a test."
+        writes(1,"Original String:")
+                writes(1,%atrim(oldString))
+                writes(1,"")
+        byteArray = ASCIIEncoding.GetBytes(oldString)
+        writes(1,"Characters in original string: "+%string(byteArray.Length,'ZZX'))
+        writes(1,"Values of each element in the returned byte array:")
+        foreach wrkByte in byteArray
+                writes(1,%string(wrkByte,'XXX')+"  ("+^a(wrkByte)+")")
+end
